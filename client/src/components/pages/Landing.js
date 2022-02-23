@@ -7,7 +7,8 @@ const Landing = () => {
         <div className='landing-inner'>
           <h1 className='x-large'>Artist Studio</h1>
           <p className='lead'>
-            Create and manage art classrooms, including Students, Parents, and Lessons.
+            Manage everything for your art classroom: Students, Parents, Class Schedules, Lesson
+            Plans, and more.
           </p>
           <div className='buttons'>
             <Link to='/register' className='btn btn-primary'>
