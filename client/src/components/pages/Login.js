@@ -1,14 +1,34 @@
-import { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Fragment, useState, useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthContext from '../../context/AuthProvider';
+import axios from '../../api/axios';
+
+const LOGIN_URL = '/login';
 
 const Login = () => {
+  let navigate = useNavigate();
+  const { setAuth } = useContext(AuthContext);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const { email, password } = formData;
   const handleChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
   const handleSubmit = async e => {
     e.preventDefault();
-    // TODO: handle login
-    // login(formData.email, formData.password);
+    try {
+      const res = await axios.post(
+        LOGIN_URL,
+        { email, password },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      const token = res?.data?.accessToken;
+      setAuth({ token });
+      navigate('/dashboard');
+    } catch (err) {
+      console.error(err);
+    }
   };
   return (
     <Fragment>

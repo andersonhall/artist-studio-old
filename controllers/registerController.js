@@ -20,30 +20,7 @@ const handleNewTeacher = async (req, res) => {
     teacher.password = await bcrypt.hash(password, salt);
 
     await teacher.save();
-
-    const payload = {
-      teacher: {
-        email,
-        password,
-      },
-    };
-
-    const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '3000s' });
-    const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '1d' });
-
-    await Teacher.findByIdAndUpdate(
-      payload.teacher.id,
-      { refreshToken: refreshToken },
-      { new: true }
-    ).exec();
-
-    res.cookie('jwt', refreshToken, {
-      httpOnly: true,
-      sameSite: 'None',
-      secure: true,
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-    res.json({ accessToken });
+    res.json('success');
   } catch (err) {
     console.error(err);
     res.status(500).send({ msg: err.message });

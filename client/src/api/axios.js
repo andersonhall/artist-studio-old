@@ -1,10 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: '/api',
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: 'http://localhost:5000/api',
 });
 
 api.interceptors.response.use(
@@ -12,6 +9,7 @@ api.interceptors.response.use(
   err => {
     if (err.response.status === 401) {
       // TODO: logout user
+      console.log('logged out due to 401');
     }
     return Promise.reject(err);
   }
