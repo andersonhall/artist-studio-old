@@ -7,7 +7,7 @@ const handleNewTeacher = async (req, res) => {
   const { name, email, password } = req.body;
   let teacher = await Teacher.findOne({ email }).exec();
   if (teacher) {
-    return res.status(409).json({ msg: `User already exists for ${email}` });
+    return res.status(409).json({ errors: [{ msg: `User already exists for ${email}` }] });
   }
   try {
     teacher = new Teacher({
@@ -20,7 +20,13 @@ const handleNewTeacher = async (req, res) => {
     teacher.password = await bcrypt.hash(password, salt);
 
     await teacher.save();
-    res.json('success');
+    const payload = {
+      teacher: {
+        id: teacher._id,
+        name: teacher.name.split(' ')[0],
+      },
+    };
+    res.json(payload);
   } catch (err) {
     console.error(err);
     res.status(500).send({ msg: err.message });

@@ -1,11 +1,13 @@
 import axios from '../../api/axios';
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import useAlerts from '../../hooks/alerts';
 
 const REGISTER_URL = '/register';
 
 const Register = () => {
   let navigate = useNavigate();
+  const { addAlert } = useAlerts();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,24 +32,25 @@ const Register = () => {
     e.preventDefault();
     const match = password === password2;
     if (!match) {
-      return console.log('passwords must match');
+      return addAlert('Passwords must match', 'danger');
     }
     try {
-      const res = await axios.post(
+      await axios.post(
         REGISTER_URL,
         { name, email, password },
         {
           headers: { 'Content-Type': 'application/json' },
         }
       );
-      setName('');
-      setEmail('');
-      setPassword('');
-      setPassword2('');
       navigate('/login');
-      console.log(res.data);
+      addAlert('Account created! Please sign in.', 'success');
     } catch (err) {
-      console.error(err);
+      const errors = err.response.data.errors;
+      if (errors) {
+        errors.forEach(error => {
+          addAlert(error.msg, 'danger');
+        });
+      }
     }
   };
   return (

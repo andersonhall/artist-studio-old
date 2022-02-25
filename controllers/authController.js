@@ -16,6 +16,7 @@ const handleLogin = async (req, res) => {
     const payload = {
       teacher: {
         id: teacher._id,
+        name: teacher.name.split(' ')[0],
       },
     };
 

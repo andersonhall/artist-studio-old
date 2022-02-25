@@ -1,12 +1,14 @@
 import { Fragment, useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../../context/AuthProvider';
+import useAlerts from '../../hooks/alerts';
 import axios from '../../api/axios';
 
 const LOGIN_URL = '/login';
 
 const Login = () => {
   let navigate = useNavigate();
+  const { addAlert } = useAlerts();
   const { setAuth } = useContext(AuthContext);
   const [formData, setFormData] = useState({ email: '', password: '' });
   const { email, password } = formData;
@@ -24,10 +26,17 @@ const Login = () => {
         }
       );
       const token = res?.data?.accessToken;
-      setAuth({ token });
+      const name = res?.data?.teacher.name;
+      setAuth({ token, name });
       navigate('/dashboard');
+      addAlert(`Welcome ${name}!`, 'success');
     } catch (err) {
-      console.error(err);
+      const errors = err.response.data.errors;
+      if (errors) {
+        errors.forEach(error => {
+          addAlert(error.msg, 'danger');
+        });
+      }
     }
   };
   return (

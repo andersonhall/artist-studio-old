@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom';
-// import Alert from '../layout/Alert';
+import Alert from '../layout/Alert';
 
 const Layout = () => {
   return (
     <section className='container'>
-      {/* TODO: <Alert /> */}
+      <Alert />
       <Outlet />
     </section>
   );
